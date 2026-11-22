@@ -30,6 +30,9 @@ python3 promptprobe.py --target examples/openai.json -o report.json
 # Only run one category
 python3 promptprobe.py --target examples/ollama.json --category system_prompt_leak
 
+# Only run high-severity payloads
+python3 promptprobe.py --target examples/ollama.json --severity high
+
 # List all payloads
 python3 promptprobe.py --list
 
