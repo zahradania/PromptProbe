@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.json
+!payloads.json
+!examples/*.json
+venv/
+.env
