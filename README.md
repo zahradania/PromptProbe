@@ -30,8 +30,11 @@ python3 promptprobe.py --target examples/openai.json -o report.json
 # Only run one category
 python3 promptprobe.py --target examples/ollama.json --category system_prompt_leak
 
-# Slower, for rate-limited APIs
-python3 promptprobe.py --target my-target.json --delay 1.0
+# List all payloads
+python3 promptprobe.py --list
+
+# Slower, for rate-limited APIs, with retries
+python3 promptprobe.py --target my-target.json --delay 1.0 --retries 2
 ```
 
 ## Target config
