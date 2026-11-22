@@ -12,7 +12,7 @@ except ImportError:
     print("[-] 'requests' is required: pip install -r requirements.txt", file=sys.stderr)
     sys.exit(1)
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 DEFAULT_CANARY = "PWNED_CANARY_7X9Q"
 
@@ -55,12 +55,14 @@ def load_target(path):
     return cfg
 
 
-def load_payloads(path, category=None, canary=DEFAULT_CANARY):
+def load_payloads(path, category=None, canary=DEFAULT_CANARY, severity=None):
     with open(path) as f:
         payloads = json.load(f)
     out = []
     for p in payloads:
         if category and p.get("category") != category:
+            continue
+        if severity and p.get("severity") != severity:
             continue
         p = dict(p)
         p["prompt"] = p["prompt"].replace("{CANARY}", canary)
@@ -229,6 +231,8 @@ def main():
                     help="payloads JSON file (default: payloads.json next to this script)")
     ap.add_argument("--category", "-c", default=None,
                     help="only run one category, e.g. system_prompt_leak")
+    ap.add_argument("--severity", default=None, choices=["low", "medium", "high"],
+                    help="only run payloads of this severity, e.g. high")
     ap.add_argument("--canary", default=DEFAULT_CANARY,
                     help="canary marker string (default: %(default)s)")
     ap.add_argument("--system-prompt", default=None,
@@ -250,7 +254,8 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     payloads_path = args.payloads or os.path.join(here, "payloads.json")
     try:
-        payloads = load_payloads(payloads_path, args.category, args.canary)
+        payloads = load_payloads(payloads_path, args.category, args.canary,
+                                 args.severity)
     except OSError as e:
         print(f"[-] cannot read payloads file {payloads_path}: {e}", file=sys.stderr)
         return 1
